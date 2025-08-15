@@ -13,5 +13,5 @@ cd task-mng
 # Build
 go build -o task-mng cmd/main.go
 
-# Run
+# Run (Сервер запустится на порту 8000)
 go run cmd/main.go

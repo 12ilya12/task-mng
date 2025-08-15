@@ -49,7 +49,7 @@ func main() {
 	signal.Notify(shutdownChan, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
-		loggerInst.Log("SERVER", "Запуск сервера :8080")
+		loggerInst.Log("SERVER", "Запуск сервера :8000")
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			loggerInst.Log("SERVER", "Сбой в работе сервера: "+err.Error())
 			os.Exit(1)
