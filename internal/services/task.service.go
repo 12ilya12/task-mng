@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/12ilya12/task-mng/internal/logger"
 	"github.com/12ilya12/task-mng/internal/models"
 	"github.com/12ilya12/task-mng/internal/repos"
 )
@@ -16,11 +17,12 @@ type TaskService interface {
 }
 
 type taskService struct {
-	repo repos.TaskRepo
+	repo   repos.TaskRepo
+	logger *logger.Logger
 }
 
-func NewTaskService(repo repos.TaskRepo) TaskService {
-	return &taskService{repo: repo}
+func NewTaskService(repo repos.TaskRepo, logger *logger.Logger) TaskService {
+	return &taskService{repo: repo, logger: logger}
 }
 
 func (s *taskService) CreateTask(ctx context.Context, title, description string) (*models.Task, error) {
@@ -37,7 +39,7 @@ func (s *taskService) CreateTask(ctx context.Context, title, description string)
 		return nil, err
 	}
 
-	//TODO: Логируем создание задачи
+	s.logger.Log("TASK", "Создана задача с идентификатором "+id)
 	return task, nil
 }
 
@@ -46,7 +48,8 @@ func (s *taskService) GetTaskByID(ctx context.Context, id string) (*models.Task,
 	if err != nil {
 		return nil, err
 	}
-	//TODO: Логируем получение задачи по идентификатору
+
+	s.logger.Log("TASK", "Запрос на получение задачи с идентификатором "+id)
 	return task, nil
 }
 
@@ -55,7 +58,11 @@ func (s *taskService) GetAllTasks(ctx context.Context, status string) ([]*models
 	if err != nil {
 		return nil, err
 	}
-	//TODO: Логируем получение задач
+	if status != "" {
+		s.logger.Log("TASK", "Запрос на получение задач со статусом "+status)
+	} else {
+		s.logger.Log("TASK", "Запрос на получение всех задач")
+	}
 	return tasks, nil
 }
 
